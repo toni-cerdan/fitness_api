@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { users } = require('./db/test');
+const { users } = require('../../db/test');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
@@ -43,5 +43,20 @@ module.exports = {
     },
     getUsers: (req, res) => {
         res.json(users);
+    },
+    getUser: (req, res) => {
+        const { email } = req.params;
+        if (email) {
+            const user = users.find(user => user.email === email);
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(404).json({ message: 'User not found' });
+            }
+        } else {
+            res.status(400).json({
+                message: 'No user id provided'
+            });
+        }
     }
 }

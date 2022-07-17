@@ -7,11 +7,9 @@ const app = express();
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
-const { isAuthorized, isNotLoggedOut } = require('./middlewares/authorization');
-const { home, signup, login, logout, getUsers } = require('./routes');
 const { users } = require('./db/test');
 
-const initializePassport = require('./passport-config');
+const initializePassport = require('./config/middlewares/passport-config');
 initializePassport(
     passport,
     email => users.find(user => user.email === email),
@@ -31,11 +29,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // routes
-app.get('/', isAuthorized, home);
-app.post('/signup', signup);
-app.post('/login', passport.authenticate('local'), login);
-app.get('/logout', isNotLoggedOut, logout);
-app.get('/users', getUsers);
+app.use('/', require('./config/routes/authentication'));
+app.use('/users', require('./config/routes/users'));
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
