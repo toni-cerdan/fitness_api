@@ -14,21 +14,15 @@ CREATE TABLE Workouts (
     user_id VARCHAR(50) NOT NULL,
     FOREIGN KEY(user_id) REFERENCES Users(id)
 );
-CREATE TABLE Categories (
-    id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-CREATE TABLE Body_parts (
-    id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
+CREATE TABLE Categories (name VARCHAR(50) PRIMARY KEY);
+CREATE TABLE Body_parts (name VARCHAR(50) PRIMARY KEY);
 CREATE TABLE Exercises (
     id VARCHAR(50) PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    category_id VARCHAR(50) NULL,
-    body_part_id VARCHAR(50) NULL,
-    FOREIGN KEY(body_part_id) REFERENCES Body_parts(id),
-    FOREIGN KEY(category_id) REFERENCES Categories(id)
+    category VARCHAR(50) NULL,
+    body_part VARCHAR(50) NULL,
+    FOREIGN KEY(body_part) REFERENCES Body_parts(name),
+    FOREIGN KEY(category) REFERENCES Categories(name)
 );
 CREATE TABLE Workout_exercises (
     workout_id VARCHAR(50) NOT NULL UNIQUE,
