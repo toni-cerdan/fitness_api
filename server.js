@@ -2,6 +2,8 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+const port = process.env.PORT || 3000;
+
 const express = require('express');
 const app = express();
 const passport = require('passport');
@@ -32,6 +34,6 @@ app.use(passport.session());
 app.use('/', require('./config/routes/authentication'));
 app.use('/users', require('./config/routes/users'));
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
