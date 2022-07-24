@@ -2,16 +2,15 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const port = process.env.PORT || 3000;
-
 const express = require('express');
-const app = express();
 const passport = require('passport');
-const flash = require('express-flash');
-const session = require('express-session');
+const db = require('./db');
 const { users } = require('./db/test');
 
-const initializePassport = require('./config/middlewares/passport-config');
+const port = process.env.PORT || 3000;
+const app = express();
+
+const initializePassport = require('./config/passport-config');
 initializePassport(
     passport,
     email => users.find(user => user.email === email),
@@ -19,21 +18,19 @@ initializePassport(
 );
 
 // configuration
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(flash());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+require('./config/express')(app, passport, db.pool);
 
 // routes
-app.use('/', require('./config/routes/authentication'));
-app.use('/users', require('./config/routes/users'));
+require('./config/routes')(app, passport, db);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+server.on('close', () => {
+    console.log('Closed express server');
+
+    db.pool.end(() => {
+        console.log('Shutdown connection pool');
+    });
 });
