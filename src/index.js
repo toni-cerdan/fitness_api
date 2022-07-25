@@ -4,13 +4,17 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const passport = require('passport');
-const db = require('./db');
-const { users } = require('./db/test');
 
-const port = process.env.PORT || 3000;
+const v1AuthenticationRoutes = require('./v1/routes/authenticationRoutes');
+const v1UsersRoutes = require('./v1/routes/userRoutes');
+
+const db = require('../db');
+const { users } = require('../db/test');
+
 const app = express();
+const port = process.env.PORT || 3000;
 
-const initializePassport = require('./config/passport-config');
+const initializePassport = require('../config/passport-config');
 initializePassport(
     passport,
     email => users.find(user => user.email === email),
@@ -18,10 +22,11 @@ initializePassport(
 );
 
 // configuration
-require('./config/express')(app, passport, db.pool);
+require('../config/express')(app, passport, db.pool);
 
-// routes
-require('./config/routes')(app, passport, db);
+// routes v1
+app.use("/api/v1/", v1AuthenticationRoutes);
+app.use("/api/v1/users", v1UsersRoutes);
 
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

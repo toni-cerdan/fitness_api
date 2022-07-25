@@ -4,8 +4,8 @@
   "description": "Fitness API for trainers",
   "main": "index.js",
   "scripts": {
-    "prod": "set NODE_ENV=production && node server.js",
-    "dev": "set NODE_ENV=development && nodemon server.js"
+    "prod": "set NODE_ENV=production && node src/index.js",
+    "dev": "set NODE_ENV=development && nodemon src/index.js"
   },
   "keywords": [
     "fitness",
