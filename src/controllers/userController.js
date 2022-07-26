@@ -5,6 +5,30 @@ const home = (req, res) => {
     res.json({ status: 'OK', data: `Hello ${email}!` });
 }
 
+const createUser = (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(400).json({ status: 'NOK', message: 'Email and password are required' });
+        return;
+    }
+
+    userService.createUser(email, password)
+        .then(createdUser => {
+            res.status(201).json({
+                status: 'OK',
+                message: 'User created successfully',
+                data: createdUser
+            });
+        })
+        .catch(err => {
+            res.status(400).json({
+                status: 'NOK',
+                message: err.message
+            });
+        });
+
+}
+
 const getAllUsers = (req, res) => {
     const users = userService.getAllUsers();
     res.json({ status: 'OK', data: users });
@@ -57,8 +81,9 @@ const deleteUser = (req, res) => {
 
 module.exports = {
     home,
-    getAllUsers,
-    getUser,
+    createUser,
     updateUserPassword,
-    deleteUser
+    deleteUser,
+    getAllUsers,
+    getUser
 }
