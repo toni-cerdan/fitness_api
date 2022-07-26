@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAllUsers, getUser } = require('../../controllers/userController');
+const { getAllUsers, getUser, deleteUser } = require('../../controllers/userController');
 
 router
     .get('/', getAllUsers)
-    .get('/:email', getUser);
+    .post('/:email', getUser)
+    .delete('/delete', deleteUser);
 
 module.exports = router;
