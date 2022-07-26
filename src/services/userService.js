@@ -24,11 +24,10 @@ const getAllUsers = () => User.getAllUsers();
 
 const getUser = (userEmail) => {
     const user = User.getUser(userEmail);
-    if (user) {
-        const { id, email, createdAt, updatedAt } = user;
-        return { id, email, createdAt, updatedAt };
-    }
-    return null;
+    if (!user) throw Error('User not found');
+
+    const { id, email, createdAt, updatedAt } = user;
+    return { id, email, createdAt, updatedAt };
 }
 
 const updateUserPassword = async (userEmail, newPassword) => {

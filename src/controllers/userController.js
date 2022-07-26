@@ -12,10 +12,15 @@ const getAllUsers = (req, res) => {
 
 const getUser = (req, res) => {
     const { email } = req.params;
-    const user = userService.getUser(email);
-    user
-        ? res.json({ status: 'OK', data: user })
-        : res.status(404).json({ status: 'NOK', error: 'User not found' });
+    try {
+        const user = userService.getUser(email);
+        res.json({ status: 'OK', data: user });
+    } catch (err) {
+        res.status(404).json({
+            status: 'NOK',
+            error: err.message
+        });
+    }
 }
 
 const updateUserPassword = (req, res) => {
@@ -29,7 +34,7 @@ const updateUserPassword = (req, res) => {
                 data: updatedUser
             });
         }).catch(err => {
-            res.status(400).json({
+            res.status(404).json({
                 status: 'NOK',
                 error: err.message
             });
