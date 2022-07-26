@@ -14,6 +14,17 @@ const getAllUsers = () => DB.users;
 
 const getUser = (email) => DB.users.find(user => user.email === email);
 
+const updateUserPassword = (userEmail, hashedPassword, updatedAt) => {
+    const user = getUser(userEmail);
+    if (!user) throw new Error('User not found');
+
+    user.password = hashedPassword;
+    user.updatedAt = updatedAt;
+
+    saveToDatabase(DB);
+    return user;
+}
+
 const deleteUser = (email) => {
     const user = getUser(email);
     if (!user) throw new Error('User not found');
@@ -28,5 +39,6 @@ module.exports = {
     createUser,
     getAllUsers,
     getUser,
+    updateUserPassword,
     deleteUser
 }

@@ -18,6 +18,24 @@ const getUser = (req, res) => {
         : res.status(404).json({ status: 'NOK', error: 'User not found' });
 }
 
+const updateUserPassword = (req, res) => {
+    const { email } = req.params;
+    const { password } = req.body;
+    userService.updateUserPassword(email, password)
+        .then(updatedUser => {
+            res.json({
+                status: 'OK',
+                message: 'User updated successfully',
+                data: updatedUser
+            });
+        }).catch(err => {
+            res.status(400).json({
+                status: 'NOK',
+                error: err.message
+            });
+        });
+}
+
 const deleteUser = (req, res) => {
     const { email } = req.body;
     try {
@@ -36,5 +54,6 @@ module.exports = {
     home,
     getAllUsers,
     getUser,
+    updateUserPassword,
     deleteUser
 }
