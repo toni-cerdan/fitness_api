@@ -4,7 +4,7 @@ const router = express.Router();
 const passport = require('passport');
 
 const { home, signup, login, logout } = require('../../controllers/authenticationController');
-const { isAuthorized, isNotLoggedOut } = require('../../../config/middlewares/authorization.js');
+const { isAuthorized, isNotLoggedOut } = require('../../middlewares/authorization.js');
 
 
 router

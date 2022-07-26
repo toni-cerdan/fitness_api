@@ -9,7 +9,7 @@ const v1AuthenticationRoutes = require('./v1/routes/authenticationRoutes');
 const v1UsersRoutes = require('./v1/routes/userRoutes');
 
 const db = require('../db');
-const { users } = require('../db/test');
+const { users } = require('./database/db.json');
 
 const app = express();
 const port = process.env.PORT || 3000;
