@@ -1,18 +1,11 @@
-const {
-    DB_USER,
-    DB_NAME,
-    DB_PASSWORD,
-    DB_HOST,
-    DB_PORT
-} = process.env;
 const pg = require('pg');
 
 const dbConfig = {
-    user: DB_USER,
-    database: DB_NAME,
-    password: DB_PASSWORD,
-    host: DB_HOST,
-    port: DB_PORT,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     max: 10,
     idleTimeoutMillis: 30000
 };
