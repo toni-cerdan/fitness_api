@@ -1,38 +1,39 @@
-const DB = require('./db.json');
-const { saveToDatabase } = require('./utils');
+const pool = require('./');
 
-const createUser = (newUser) => {
-    const isAlreadyCreated = getUser(newUser.email);
-    if (isAlreadyCreated) throw new Error('User already exists');
+const createUser = async (newUser) => {
+    const user = await getUser(newUser.email);
+    if (user) throw new Error('User already exists');
 
-    DB.users.push(newUser);
-    saveToDatabase(DB);
+    const { id, name, email, password, createdAt, updatedAt } = newUser;
+
+    await pool.query('INSERT INTO users (id, name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)', [id, name, email, password, createdAt, updatedAt]);
     return newUser;
 }
 
-const getAllUsers = () => DB.users;
-
-const getUser = (email) => DB.users.find(user => user.email === email);
-
-const updateUserPassword = (userEmail, hashedPassword, updatedAt) => {
-    const user = getUser(userEmail);
-    if (!user) throw new Error('User not found');
-
-    user.password = hashedPassword;
-    user.updatedAt = updatedAt;
-
-    saveToDatabase(DB);
-    return user;
+const getAllUsers = async () => {
+    const users = await pool.query('SELECT * FROM users');
+    return users.rows;
 }
 
-const deleteUser = (email) => {
-    const user = getUser(email);
+const getUser = async (email) => {
+    const user = await pool.query('SELECT id, name, email, created_at, updated_at FROM users WHERE email = $1', [email]);
+    return user.rows[0];
+}
+
+const updateUserPassword = async (userEmail, hashedPassword, updatedAt) => {
+    const user = await getUser(userEmail);
     if (!user) throw new Error('User not found');
 
-    const dbUpdated = DB.users.filter(user => user.email !== email);
-    DB.users = dbUpdated;
-    saveToDatabase(DB);
-    return user.email;
+    await pool.query('UPDATE users SET password = $1, updated_at = $2 WHERE email = $3', [hashedPassword, updatedAt, userEmail]);
+    return await getUser(userEmail);
+}
+
+const deleteUser = async (email) => {
+    const user = await getUser(email);
+    if (!user) throw new Error('User not found');
+
+    await pool.query('DELETE FROM users WHERE email = $1', [email]);
+    return email;
 }
 
 module.exports = {

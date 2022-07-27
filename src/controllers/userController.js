@@ -6,13 +6,13 @@ const home = (req, res) => {
 }
 
 const createUser = (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     if (!email || !password) {
         res.status(400).json({ status: 'NOK', message: 'Email and password are required' });
         return;
     }
 
-    userService.createUser(email, password)
+    userService.createUser(name, email, password)
         .then(createdUser => {
             res.status(201).json({
                 status: 'OK',
@@ -30,21 +30,35 @@ const createUser = (req, res) => {
 }
 
 const getAllUsers = (req, res) => {
-    const users = userService.getAllUsers();
-    res.json({ status: 'OK', data: users });
+    userService.getAllUsers()
+        .then(users => {
+            res.json({
+                status: 'OK',
+                data: users
+            });
+        }).catch(err => {
+            res.status(404).json({
+                status: 'NOK',
+                error: err.message
+            });
+        });
 }
 
 const getUser = (req, res) => {
     const { email } = req.params;
-    try {
-        const user = userService.getUser(email);
-        res.json({ status: 'OK', data: user });
-    } catch (err) {
-        res.status(404).json({
-            status: 'NOK',
-            error: err.message
+    userService.getUser(email)
+        .then(user => {
+            res.json({
+                status: 'OK',
+                data: user
+            });
+        }
+        ).catch(err => {
+            res.status(404).json({
+                status: 'NOK',
+                error: err.message
+            });
         });
-    }
 }
 
 const updateUserPassword = (req, res) => {
@@ -67,16 +81,20 @@ const updateUserPassword = (req, res) => {
 
 const deleteUser = (req, res) => {
     const { email } = req.body;
-    try {
-        const userDeleted = userService.deleteUser(email);
-        res.json({
-            status: 'OK',
-            message: 'User deleted successfully',
-            data: userDeleted
+
+    userService.deleteUser(email)
+        .then(user => {
+            res.json({
+                status: 'OK',
+                message: 'User deleted successfully',
+                data: user
+            });
+        }).catch(err => {
+            res.status(404).json({
+                status: 'NOK',
+                error: err.message
+            });
         });
-    } catch (err) {
-        res.status(404).json({ status: 'NOK', error: err.message });
-    }
 }
 
 module.exports = {

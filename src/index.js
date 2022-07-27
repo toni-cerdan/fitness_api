@@ -8,7 +8,7 @@ const passport = require('passport');
 const v1AuthenticationRoutes = require('./v1/routes/authenticationRoutes');
 const v1UsersRoutes = require('./v1/routes/userRoutes');
 
-const db = require('../db');
+const pool = require('./database');
 const { users } = require('./database/db.json');
 
 const app = express();
@@ -22,7 +22,7 @@ initializePassport(
 );
 
 // configuration
-require('../config/express')(app, passport, db.pool);
+require('../config/express')(app, passport);
 
 // routes v1
 app.use("/api/v1/", v1AuthenticationRoutes);
@@ -35,7 +35,7 @@ const server = app.listen(port, () => {
 server.on('close', () => {
     console.log('Closed express server');
 
-    db.pool.end(() => {
+    pool.end(() => {
         console.log('Shutdown connection pool');
     });
 });
