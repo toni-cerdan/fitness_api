@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 
-module.exports = (app, passport, pool) => {
+module.exports = (app, passport) => {
     app
         .use(express.json())
         .use(express.urlencoded({ extended: false }))
