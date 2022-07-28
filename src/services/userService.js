@@ -22,8 +22,8 @@ const createUser = async (userName, userEmail, password) => {
 
 const getAllUsers = () => User.getAllUsers();
 
-const getUser = async (userEmail) => {
-    const user = await User.getUser(userEmail);
+const getUserByEmail = async (userEmail) => {
+    const user = await User.getUserByEmail(userEmail);
     if (!user) throw Error('User not found');
 
     return { id, email, createdAt, updatedAt } = user;
@@ -43,7 +43,7 @@ const deleteUser = email => User.deleteUser(email);
 module.exports = {
     createUser,
     getAllUsers,
-    getUser,
+    getUserByEmail,
     updateUserPassword,
     deleteUser
 }

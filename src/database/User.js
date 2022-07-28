@@ -1,7 +1,7 @@
 const pool = require('./');
 
 const createUser = async (newUser) => {
-    const user = await getUser(newUser.email);
+    const user = await getUserByEmail(newUser.email);
     if (user) throw new Error('User already exists');
 
     const { id, name, email, password, createdAt, updatedAt } = newUser;
@@ -15,13 +15,18 @@ const getAllUsers = async () => {
     return users.rows;
 }
 
-const getUser = async (email) => {
-    const user = await pool.query('SELECT id, name, email, created_at, updated_at FROM users WHERE email = $1', [email]);
+const getUserByEmail = async (email) => {
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    return user.rows[0];
+}
+
+const getUserById = async (id) => {
+    const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
     return user.rows[0];
 }
 
 const updateUserPassword = async (userEmail, hashedPassword, updatedAt) => {
-    const user = await getUser(userEmail);
+    const user = await getUserByEmail(userEmail);
     if (!user) throw new Error('User not found');
 
     await pool.query('UPDATE users SET password = $1, updated_at = $2 WHERE email = $3', [hashedPassword, updatedAt, userEmail]);
@@ -29,7 +34,7 @@ const updateUserPassword = async (userEmail, hashedPassword, updatedAt) => {
 }
 
 const deleteUser = async (email) => {
-    const user = await getUser(email);
+    const user = await getUserByEmail(email);
     if (!user) throw new Error('User not found');
 
     await pool.query('DELETE FROM users WHERE email = $1', [email]);
@@ -39,7 +44,8 @@ const deleteUser = async (email) => {
 module.exports = {
     createUser,
     getAllUsers,
-    getUser,
+    getUserByEmail,
+    getUserById,
     updateUserPassword,
     deleteUser
 }
