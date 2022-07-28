@@ -2,27 +2,34 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+const port = process.env.PORT || 3000;
 const express = require('express');
+const session = require('express-session');
 const passport = require('passport');
 
+// routes
 const v1AuthenticationRoutes = require('./v1/routes/authenticationRoutes');
 const v1UsersRoutes = require('./v1/routes/userRoutes');
 
-const pool = require('./database');
-const { users } = require('./database/db.json');
-
+// initialization
 const app = express();
-const port = process.env.PORT || 3000;
-
-const initializePassport = require('../config/passport-config');
-initializePassport(
-    passport,
-    email => users.find(user => user.email === email),
-    id => users.find(user => user.id === id)
-);
+const pool = require('./database');
+require('./config/passport-config');
 
 // configuration
-require('../config/express')(app, passport);
+app
+    .use(express.json())
+    .use(express.urlencoded({ extended: false }))
+    .use(session({
+        secret: 'SECRET',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+        }
+    }))
+    .use(passport.initialize())
+    .use(passport.session());
 
 // routes v1
 app.use("/api/v1/", v1AuthenticationRoutes);
