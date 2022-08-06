@@ -9,7 +9,8 @@ const passport = require('passport');
 
 // routes
 const v1AuthenticationRoutes = require('./v1/routes/authenticationRoutes');
-const v1UsersRoutes = require('./v1/routes/userRoutes');
+const v1UserRoutes = require('./v1/routes/userRoutes');
+const v1ExerciseRoutes = require('./v1/routes/exerciseRoutes');
 
 // initialization
 const app = express();
@@ -33,7 +34,8 @@ app
 
 // routes v1
 app.use("/api/v1/", v1AuthenticationRoutes);
-app.use("/api/v1/users", v1UsersRoutes);
+app.use("/api/v1/users", v1UserRoutes);
+app.use("/api/v1/exercises", v1ExerciseRoutes);
 
 const server = app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
