@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAllExercises } = require('../../controllers/exerciseController');
+const { getAllExercises, getExercisesByCategory } = require('../../controllers/exerciseController');
 
 
 router
-    .get('/', getAllExercises);
+    .get('/', getAllExercises)
+    .get('/category/:category', getExercisesByCategory);
 
 
 module.exports = router;
