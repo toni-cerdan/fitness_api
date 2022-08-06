@@ -10,7 +10,13 @@ const getExercisesByCategory = async (category) => {
     return exercises.rows;
 }
 
+const getExercisesByBodyPart = async (bodyPart) => {
+    const exercises = await pool.query('SELECT * FROM exercises WHERE body_part = $1', [bodyPart]);
+    return exercises.rows;
+}
+
 module.exports = {
     getAllExercises,
-    getExercisesByCategory
+    getExercisesByCategory,
+    getExercisesByBodyPart
 }

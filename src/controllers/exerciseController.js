@@ -31,7 +31,25 @@ const getExercisesByCategory = (req, res) => {
         });
 }
 
+const getExercisesByBodyPart = (req, res) => {
+    const { body_part: bodyPart } = req.params;
+    exerciseService.getExercisesByBodyPart(bodyPart)
+        .then(exercises => {
+            res.json({
+                status: 'OK',
+                data: exercises
+            });
+        }).catch(err => {
+            res.status(404).json({
+                status: 'NOK',
+                error: err.message
+            });
+        });
+}
+
+
 module.exports = {
     getAllExercises,
-    getExercisesByCategory
+    getExercisesByCategory,
+    getExercisesByBodyPart
 }
