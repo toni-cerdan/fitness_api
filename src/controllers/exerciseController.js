@@ -1,7 +1,8 @@
 const exerciseService = require('../services/exerciseService');
 
-const getAllExercises = (req, res) => {
-    exerciseService.getAllExercises()
+const getExercises = (req, res) => {
+    const { category, body_part } = req.query;
+    exerciseService.getExercises(category, body_part)
         .then(exercises => {
             res.json({
                 status: 'OK',
@@ -14,42 +15,7 @@ const getAllExercises = (req, res) => {
             });
         });
 }
-
-const getExercisesByCategory = (req, res) => {
-    const { category } = req.params;
-    exerciseService.getExercisesByCategory(category)
-        .then(exercises => {
-            res.json({
-                status: 'OK',
-                data: exercises
-            });
-        }).catch(err => {
-            res.status(404).json({
-                status: 'NOK',
-                error: err.message
-            });
-        });
-}
-
-const getExercisesByBodyPart = (req, res) => {
-    const { body_part: bodyPart } = req.params;
-    exerciseService.getExercisesByBodyPart(bodyPart)
-        .then(exercises => {
-            res.json({
-                status: 'OK',
-                data: exercises
-            });
-        }).catch(err => {
-            res.status(404).json({
-                status: 'NOK',
-                error: err.message
-            });
-        });
-}
-
 
 module.exports = {
-    getAllExercises,
-    getExercisesByCategory,
-    getExercisesByBodyPart
+    getExercises
 }

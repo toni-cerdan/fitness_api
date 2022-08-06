@@ -1,6 +1,6 @@
 const pool = require('./');
 
-const getAllExercises = async () => {
+const getExercises = async () => {
     const exercises = await pool.query('SELECT * FROM exercises');
     return exercises.rows;
 }
@@ -15,8 +15,14 @@ const getExercisesByBodyPart = async (bodyPart) => {
     return exercises.rows;
 }
 
+const getExercisesByCategoryAndBodyPart = async (category, bodyPart) => {
+    const exercises = await pool.query('SELECT * FROM exercises WHERE category = $1 AND body_part = $2', [category, bodyPart]);
+    return exercises.rows;
+}
+
 module.exports = {
-    getAllExercises,
+    getExercises,
     getExercisesByCategory,
-    getExercisesByBodyPart
+    getExercisesByBodyPart,
+    getExercisesByCategoryAndBodyPart
 }
